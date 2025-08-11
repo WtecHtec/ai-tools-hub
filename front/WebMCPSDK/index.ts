@@ -8,7 +8,8 @@ class McpToolSdk {
   private running = false;
   private results: TaskResult[] = [];
   private registeredPages = new Set<string>();
-
+  private copilotActions: any[] = [];
+  
   private constructor() {}
 
   static getInstance() {
@@ -93,6 +94,20 @@ class McpToolSdk {
           }
         }
       }, interval);
+    });
+  }
+
+  addCopilotAction(copilotAction: any) {
+    this.copilotActions = [...this.copilotActions, copilotAction];
+  }
+
+  initCopilotAction() {
+    this.copilotActions.forEach((ca) => {
+      try {
+        ca();
+      } catch {
+        console.log("初始化失败");
+      }
     });
   }
 }

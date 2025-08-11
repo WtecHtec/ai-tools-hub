@@ -35,4 +35,5 @@ const useTaskMcpTool = () => {
   });
 };
 
-export default useTaskMcpTool;
+mcpToolSdk.addCopilotAction(useTaskMcpTool);
+// export default useTaskMcpTool;

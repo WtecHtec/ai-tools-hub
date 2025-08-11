@@ -1,9 +1,10 @@
-import useTaskMcpTool from "@/pages/Task/_tools/useTaskMcpTool.tsx";
+import { mcpToolSdk } from "..";
+
 
 
 export const useMcpToolProvider = () => {
 
-  useTaskMcpTool()
+  mcpToolSdk.initCopilotAction();
 
   return {};
 };

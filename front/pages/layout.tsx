@@ -4,7 +4,7 @@ import { CopilotPopup } from "@copilotkit/react-ui";
 import { CopilotKit } from "@copilotkit/react-core";
 import { ToolProviderWrapper } from "@/WebMCPSDK/ToolProviderWrapper";
 import TaskApp from "@/pages/TaskApp"
-
+import "@/pages/Task/_tools/useTaskMcpTool"
 const Layout = () => {
   return (
     <>
