@@ -11,7 +11,8 @@ const {
     OpenAIAdapter,
     copilotRuntimeNodeHttpEndpoint,
 
-     } = require("@copilotkit/runtime")
+     } = require("@copilotkit/runtime");
+const { fetchWebContent } = require("./tools");
   
 
 
@@ -60,7 +61,30 @@ const serviceAdapter = new OpenAIAdapter( {openai});
  
 app.use('/copilotkit', (req, res, next) => {
   (async () => {
-    const runtime = new CopilotRuntime();
+    const runtime = new CopilotRuntime({
+      actions:  ({properties, url}) => { 
+        return [
+          {
+            name: "getWebpageContent",
+            description: "Fetch and return webpage text",
+            parameters: [
+              {
+                name: "url",
+                type: "string",
+                description: "web page url",
+                required: true,
+              },
+            ],
+            handler: async ({url}) => {
+              // do something with the userId
+              // return the user data
+              return await  fetchWebContent(url)
+            },
+          },
+    
+        ]
+      }
+    });
     const handler = copilotRuntimeNodeHttpEndpoint({
       endpoint: '/copilotkit',
       runtime,
