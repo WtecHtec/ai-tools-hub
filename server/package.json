@@ -13,10 +13,13 @@
   "dependencies": {
     "@ag-ui/client": "^0.0.28",
     "@copilotkit/runtime": "1.8.14-next.4",
+    "@langchain/textsplitters": "^0.1.0",
     "cors": "^2.8.5",
+    "cosine-similarity": "^1.0.1",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "node-fetch": "^2.7.0",
+    "ollama": "^0.5.17",
     "openai": "^4.98.0"
   }
 }
