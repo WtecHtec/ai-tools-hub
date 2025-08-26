@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const OpenAI =   require("openai");
 const fetch = require("node-fetch");
+
+
 require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3100;
@@ -12,7 +14,10 @@ const {
     copilotRuntimeNodeHttpEndpoint,
 
      } = require("@copilotkit/runtime");
+
 const { fetchWebContent } = require("./tools");
+const RAGTool = require('./tool-rag');
+const { docs } = require("./docs");
   
 
 
@@ -25,6 +30,17 @@ app.use(express.json());
 
  
 const apiKey = process.env.GITHUB_API_KEY;
+
+// 创建实例
+const rag = new RAGTool({
+  chunkSize: 1000,
+  chunkOverlap: 200,
+  embeddingModel: "mxbai-embed-large"
+});
+
+
+
+
 // 自定义fetch封装，改成请求智谱API
 async function customFetch(url, options) {
     // 你可以根据 url 和 options 自行改造请求，转发到智谱API
@@ -81,6 +97,26 @@ app.use('/copilotkit', (req, res, next) => {
               return await  fetchWebContent(url)
             },
           },
+
+          {
+            name: "retrieve_knowledge",
+            description: "从知识库中检索相关内容",
+            parameters: [
+              {
+                name: "query",
+                type: "string",
+                description: "用户的查询问题",
+                required: true,
+              },
+            ],
+            handler: async ({query}) => {
+              console.log("query:::", query)
+              // do something with the userId
+              // return the user data
+              return await  rag.answer(query)
+            },
+          },
+
     
         ]
       }
@@ -123,7 +159,8 @@ app.use((err, req, res, next) => {
   });
 
 // 启动服务器
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await rag.init(docs);
     console.log(`🚀 AG-UI Node.js 服务器运行在 http://localhost:${PORT}`);
     console.log(`📝 健康检查: http://localhost:${PORT}/health`);
     console.log(`⏰ 启动时间: ${new Date().toLocaleString()}`);
